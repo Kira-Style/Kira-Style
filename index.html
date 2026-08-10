@@ -8,10 +8,10 @@
   <style>
     :root {
       --primary-color: #0088cc;
-      --bg-main: #8a9296; /* Ваш колір */
+      --bg-main: #8a9296;
       --card-bg: #ffffff;
       --text-main: #333;
-      --transition: all 0.25s ease;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -22,6 +22,7 @@
       padding: 0;
       background-color: var(--bg-main);
       color: var(--text-main);
+      scroll-behavior: smooth;
     }
 
     /* Шапка */
@@ -37,12 +38,15 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    .logo h1 {
-      margin: 0;
-      font-size: 1.3rem;
-      color: var(--primary-color);
-      font-weight: 700;
+    .logo h1 { margin: 0; font-size: 1.3rem; color: var(--primary-color); font-weight: 700; }
+
+    /* Анімація кошика */
+    @keyframes cartBump {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
     }
+    .cart-bump { animation: cartBump 0.3s ease-in-out; }
 
     .btn-cart {
       background: var(--primary-color);
@@ -52,124 +56,145 @@
       border-radius: 10px;
       cursor: pointer;
       font-weight: 600;
-      font-size: 14px;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 8px;
+      transition: var(--transition);
     }
+
+    /* Skeleton Loader */
+    .skeleton {
+      background: #eee;
+      background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+      border-radius: 12px;
+      background-size: 200% 100%;
+      animation: 1.5s shine linear infinite;
+    }
+    @keyframes shine {
+      to { background-position-x: -200%; }
+    }
+    .skeleton-card { height: 300px; width: 100%; }
+
+    /* Стікери (Badges) */
+    .badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #fff;
+      z-index: 2;
+    }
+    .badge-new { background: #28a745; }
+    .badge-hit { background: #ffc107; color: #000; }
+    .badge-sale { background: #dc3545; }
 
     /* Основний контейнер */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 15px;
-    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 15px; min-height: 80vh; }
 
     /* Пошук */
-    .search-box {
-      margin-bottom: 20px;
-    }
+    .search-box { margin-bottom: 20px; position: relative; }
     #search-input {
       width: 100%;
-      padding: 12px 20px;
+      padding: 14px 20px;
       border-radius: 25px;
       border: none;
       font-size: 16px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       outline: none;
     }
 
     /* Категорії */
-    .categories, .subcategories {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
+    .categories, .subcategories { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
     .cat-btn, .subcat-btn {
-      padding: 8px 16px;
+      padding: 10px 18px;
       border: none;
       background: #fff;
-      color: #444;
-      border-radius: 20px;
+      border-radius: 25px;
       cursor: pointer;
-      font-weight: 500;
-      font-size: 14px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      font-weight: 600;
+      font-size: 13px;
       transition: var(--transition);
     }
-
     .cat-btn.active { background: var(--primary-color); color: #fff; }
     .subcat-btn.active { background: #444; color: #fff; }
+
+    /* Empty State */
+    #empty-state {
+      display: none;
+      text-align: center;
+      padding: 50px 20px;
+      color: #fff;
+    }
+    #empty-state span { font-size: 50px; display: block; margin-bottom: 10px; }
 
     /* Сітка товарів */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 20px;
-      margin-top: 20px;
     }
 
     .card {
       background: var(--card-bg);
-      border-radius: 12px;
+      border-radius: 15px;
       padding: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      position: relative;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transition: var(--transition);
       display: flex;
       flex-direction: column;
-      transition: transform 0.2s;
     }
+    .card:hover { transform: translateY(-5px); }
 
     .card img {
       width: 100%;
       height: 180px;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: zoom-in;
     }
 
-    .card h3 {
-      font-size: 1rem;
-      margin: 12px 0 8px;
-      height: 2.4em;
-      overflow: hidden;
-    }
+    .card h3 { font-size: 1rem; margin: 12px 0 8px; height: 2.4em; overflow: hidden; }
 
-    .price-tag {
-      font-weight: 700;
-      color: var(--primary-color);
-      font-size: 1.1rem;
-      margin-bottom: 10px;
-    }
-
-    .qty-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .qty-input {
-      width: 50px;
-      padding: 4px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      text-align: center;
-    }
+    .price-tag { font-weight: 700; color: var(--primary-color); font-size: 1.2rem; margin-bottom: 10px; }
 
     .btn-add {
       background: var(--primary-color);
       color: #fff;
       border: none;
-      padding: 10px;
-      border-radius: 8px;
+      padding: 12px;
+      border-radius: 10px;
       cursor: pointer;
       width: 100%;
-      font-weight: 600;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+    .btn-add:active { transform: scale(0.95); }
+
+    /* Кнопка Вгору */
+    #btn-up {
+      display: none;
+      position: fixed;
+      bottom: 30px;
+      right: 20px;
+      z-index: 99;
+      background: #fff;
+      color: var(--primary-color);
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      font-size: 20px;
+      font-weight: bold;
     }
 
-    /* Модальні вікна */
+    /* Модальні вікна (загальні стилі) */
     .modal {
       display: none;
       position: fixed;
@@ -179,52 +204,24 @@
       justify-content: center;
       align-items: center;
       padding: 15px;
+      backdrop-filter: blur(5px);
     }
 
     .modal-content {
       background: #fff;
       padding: 25px;
-      border-radius: 15px;
+      border-radius: 20px;
       width: 100%;
       max-width: 450px;
       max-height: 90vh;
       overflow-y: auto;
     }
 
-    .modal-content input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    /* Стиль для помилки валідації */
-    .input-error { border-color: #ff4d4d !important; background: #fff5f5; }
-
-    /* Мобільна версія */
     @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .card img { height: 140px; }
+      .card h3 { font-size: 0.85rem; }
       header { padding: 10px 15px; }
-      .logo h1 { font-size: 1.1rem; }
-      
-      .grid {
-        grid-template-columns: 1fr 1fr; /* По 2 товари в ряд */
-        gap: 10px;
-      }
-      
-      .card { padding: 8px; }
-      .card img { height: 130px; }
-      .card h3 { font-size: 0.9rem; margin: 8px 0; }
-      .price-tag { font-size: 1rem; }
-      
-      .cat-btn, .subcat-btn { padding: 6px 12px; font-size: 12px; }
-    }
-
-    #img-modal img {
-      max-width: 100%;
-      max-height: 80vh;
-      border-radius: 10px;
     }
   </style>
 </head>
@@ -232,102 +229,129 @@
 
   <header>
     <div class="logo"><h1>Kira стиль</h1></div>
-    <button class="btn-cart" onclick="toggleCart()">
+    <button id="cart-btn-main" class="btn-cart" onclick="toggleCart()">
       🛒 <span id="cart-count">0</span>
     </button>
   </header>
 
   <div class="container">
-    <!-- Пошук -->
     <div class="search-box">
-      <input type="text" id="search-input" placeholder="Пошук товарів за назвою...">
+      <input type="text" id="search-input" placeholder="Пошук тканини чи фурнітури...">
     </div>
 
-    <!-- Категорії -->
     <div class="categories" id="categories-container"></div>
     <div class="subcategories" id="subcategories-container"></div>
 
-    <!-- Каталог -->
-    <div id="products-grid" class="grid"></div>
-  </div>
+    <!-- Порожній стан -->
+    <div id="empty-state">
+      <span>🔎</span>
+      <p>Нічого не знайдено. Спробуйте іншу назву або категорію.</p>
+    </div>
 
-  <!-- Кошик -->
-  <div class="modal" id="cart-modal">
-    <div class="modal-content">
-      <h2 style="margin-top:0">Ваше замовлення</h2>
-      <div id="cart-items"></div>
-      <p style="font-size:1.2rem; font-weight:700">Всього: <span id="cart-total">0</span> грн</p>
-      
-      <input type="text" id="cust-name" placeholder="Ваше ім'я" required>
-      <input type="tel" id="cust-phone" placeholder="0991234567" required>
-      <small id="phone-hint" style="color:#666; font-size:12px;">Введіть 10 цифр номера</small>
-
-      <button class="btn-add" onclick="validateAndSend()" style="margin-top:15px">Відправити замовлення</button>
-      <button class="btn-add" onclick="toggleCart()" style="background:#888; margin-top:8px">Закрити</button>
+    <!-- Сітка з скелетонами при завантаженні -->
+    <div id="products-grid" class="grid">
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
     </div>
   </div>
 
-  <!-- Збільшення фото -->
+  <button id="btn-up" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
+
+  <!-- Модалка кошика -->
+  <div class="modal" id="cart-modal">
+    <div class="modal-content">
+      <h2 style="margin-top:0">Кошик</h2>
+      <div id="cart-items"></div>
+      <p style="font-size:1.3rem; font-weight:700">Разом: <span id="cart-total">0</span> грн</p>
+      
+      <input type="text" id="cust-name" placeholder="Ваше ім'я" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;">
+      <input type="tel" id="cust-phone" placeholder="098 765 43 21" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #ddd; border-radius:10px;">
+
+      <button class="btn-add" onclick="validateAndSend()">Оформити замовлення</button>
+      <button class="btn-add" onclick="toggleCart()" style="background:#eee; color:#333; margin-top:8px">Закрити</button>
+    </div>
+  </div>
+
   <div class="modal" id="img-modal" onclick="this.style.display='none'">
-    <img id="img-modal-src" src="">
+    <img id="img-modal-src" src="" style="max-width:95%; max-height:85vh; border-radius:15px;">
   </div>
 
   <script>
-    // Функція пошуку
+    // 1. Збереження та завантаження кошика (LocalStorage)
+    // Ці функції мають працювати разом з вашим script.js
+    function saveCart(cart) {
+      localStorage.setItem('kira_style_cart', JSON.stringify(cart));
+    }
+
+    function loadCart() {
+      const saved = localStorage.getItem('kira_style_cart');
+      return saved ? JSON.parse(saved) : [];
+    }
+
+    // 2. Анімація кошика при додаванні
+    function animateCart() {
+      const btn = document.getElementById('cart-btn-main');
+      btn.classList.add('cart-bump');
+      setTimeout(() => btn.classList.remove('cart-bump'), 300);
+    }
+
+    // 3. Пошук та Empty State
     document.getElementById('search-input').addEventListener('input', function(e) {
       const term = e.target.value.toLowerCase();
       const cards = document.querySelectorAll('.card');
+      let found = false;
       
       cards.forEach(card => {
         const title = card.querySelector('h3').innerText.toLowerCase();
         if(title.includes(term)) {
           card.style.display = 'flex';
+          found = true;
         } else {
           card.style.display = 'none';
         }
       });
+
+      document.getElementById('empty-state').style.display = found ? 'none' : 'block';
     });
 
-    // Валідація номера телефону та відправка
+    // 4. Кнопка Вгору
+    window.onscroll = function() {
+      const btn = document.getElementById("btn-up");
+      if (document.documentElement.scrollTop > 400) {
+        btn.style.display = "block";
+      } else {
+        btn.style.display = "none";
+      }
+    };
+
+    // 5. Валідація телефону
     function validateAndSend() {
-      const phoneInput = document.getElementById('cust-phone');
-      const nameInput = document.getElementById('cust-name');
-      const phoneDigits = phoneInput.value.replace(/\D/g, ''); // тільки цифри
+      const phone = document.getElementById('cust-phone').value.replace(/\D/g, '');
+      const name = document.getElementById('cust-name').value;
 
-      // Проста перевірка: якщо менше 10 цифр - видаємо помилку
-      if (phoneDigits.length < 10) {
-        phoneInput.classList.add('input-error');
-        alert('Будь ласка, введіть коректний номер телефону (10 цифр).');
-        return;
-      } else {
-        phoneInput.classList.remove('input-error');
-      }
-
-      if (nameInput.value.trim().length < 2) {
-        nameInput.classList.add('input-error');
-        alert('Будь ласка, введіть ваше ім’я.');
+      if (name.length < 2) {
+        alert("Будь ласка, введіть ім'я");
         return;
       }
-
-      // Якщо все ок, викликаємо оригінальну функцію з вашого script.js
-      if (typeof sendOrder === 'function') {
-        sendOrder();
-      } else {
-        alert('Помилка: функція відправки не знайдена в script.js');
+      if (phone.length < 10) {
+        alert("Введіть коректний номер телефону (10 цифр)");
+        return;
       }
+      
+      if (typeof sendOrder === 'function') sendOrder();
     }
 
-    // Збільшення фото
-    document.getElementById('products-grid').addEventListener('click', function(e) {
-      if (e.target.tagName === 'IMG') {
-        const modal = document.getElementById('img-modal');
-        document.getElementById('img-modal-src').src = e.target.src;
-        modal.style.display = 'flex';
-      }
-    });
+    // Приклад того, як додати Стікери (якщо ви редагуєте створення карток у script.js)
+    /* 
+       При генерації HTML картки додавайте: 
+       <div class="badge badge-new">Новинка</div> 
+    */
   </script>
 
-  <!-- Підключення вашої логіки -->
+  <!-- ВАЖЛИВО: підключення вашого файлу -->
   <script src="script.js"></script>
+
 </body>
 </html>
