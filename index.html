@@ -3,64 +3,222 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Магазин тканини та фурнітури</title>
+  <title>Kira стиль — світ тканини та фурнітури</title>
   <style>
-    body { font-family: sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
-    .header { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-    
-    /* Фінальні стилі категорій */
-    .categories { margin: 20px 0 10px 0; display: flex; gap: 10px; flex-wrap: wrap; }
-    .subcategories { margin-bottom: 20px; display: flex; gap: 8px; flex-wrap: wrap; }
-    
-    .cat-btn, .subcat-btn { padding: 8px 16px; border: 1px solid #0088cc; border-radius: 20px; background: #fff; color: #0088cc; cursor: pointer; font-weight: bold; }
-    .cat-btn.active, .subcat-btn.active { background: #0088cc; color: #fff; }
-    .subcat-btn { border-color: #6c757d; color: #6c757d; font-weight: normal; font-size: 14px; }
-    .subcat-btn.active { background: #6c757d; color: #fff; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-    .card { background: #fff; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; }
-    .card img { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; }
-    
-    .qty-box { margin: 10px 0; display: flex; justify-content: center; align-items: center; gap: 5px; }
-    .qty-input { width: 70px; padding: 5px; text-align: center; border: 1px solid #ccc; border-radius: 4px; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      padding: 20px;
+    }
 
-    .btn { background: #0088cc; color: #fff; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; width: 100%; }
-    
-    .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; }
-    .modal-content { background: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 450px; }
-    input[type="text"], input[type="tel"] { width: 100%; padding: 10px; margin: 8px 0; box-sizing: border-box; }
+    header {
+      text-align: center;
+      padding: 30px 10px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      color: #2c3e50;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      color: #7f8c8d;
+      margin-top: 8px;
+      font-size: 1.1rem;
+    }
+
+    /* Сітка товарів */
+    .catalog {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-img-container {
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      background-color: #eee;
+      cursor: zoom-in; /* Показує курсор збільшення */
+      position: relative;
+    }
+
+    .card-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .card-img-container:hover img {
+      transform: scale(1.05);
+    }
+
+    .card-body {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-transform: capitalize;
+      color: #333;
+      line-height: 1.3;
+    }
+
+    .card-category {
+      font-size: 0.8rem;
+      color: #888;
+      background: #f0f0f0;
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      width: fit-content;
+    }
+
+    .card-price {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #e74c3c;
+      margin-top: 5px;
+    }
+
+    /* Модальне вікно для збільшення зображення */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.85);
+      justify-content: center;
+      align-items: center;
+      cursor: zoom-out;
+      padding: 20px;
+    }
+
+    .modal img {
+      max-width: 90%;
+      max-height: 90vh;
+      border-radius: 8px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+      object-fit: contain;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: #fff;
+      font-size: 35px;
+      font-weight: bold;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <h2>🧵 Світ Тканини та Фурнітури</h2>
-    <button class="btn" onclick="toggleCart()" style="width: auto;">🛒 Кошик (<span id="cart-count">0</span>)</button>
+  <header>
+    <h1>Kira стиль</h1>
+    <p>Світ тканини та фурнітури</p>
+  </header>
+
+  <main>
+    <div id="catalog" class="catalog"></div>
+  </main>
+
+  <!-- Модальне вікно для перегляду фото -->
+  <div id="imageModal" class="modal">
+    <span class="modal-close">&times;</span>
+    <img id="modalImg" src="" alt="Збільшене фото">
   </div>
 
-  <!-- Кнопки головних категорій -->
-  <div class="categories" id="categories-container"></div>
-  <!-- Кнопки підкатегорій -->
-  <div class="subcategories" id="subcategories-container"></div>
+  <script>
+    // Завантаження даних із вашого JSON-файлу
+    // Переконайся, що JSON-файл лежить поряд і називається data.json (або зміни назву тут)
+    fetch('data.json')
+      .then(response => response.json())
+      .then(products => {
+        renderCatalog(products);
+      })
+      .catch(error => {
+        console.error('Помилка завантаження товарів:', error);
+      });
 
-  <!-- Сітка товарів -->
-  <div class="grid" id="products-grid"></div>
+    function renderCatalog(products) {
+      const catalogContainer = document.getElementById('catalog');
+      catalogContainer.innerHTML = '';
 
-  <!-- Кошик -->
-  <div class="modal" id="cart-modal">
-    <div class="modal-content">
-      <h3>Ваше замовлення</h3>
-      <div id="cart-items" style="max-height: 250px; overflow-y: auto;"></div>
-      <h4>Всього: <span id="cart-total">0</span> грн</h4>
-      
-      <input type="text" id="cust-name" placeholder="Ваше ім'я" required>
-      <input type="tel" id="cust-phone" placeholder="Ваш номер телефону" required>
-      
-      <button class="btn" onclick="sendOrder()">Надіслати замовлення</button>
-      <button class="btn" onclick="toggleCart()" style="background:#888; margin-top: 5px;">Закрити</button>
-    </div>
-  </div>
+      products.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
 
-  <script src="script.js"></script>
+        card.innerHTML = `
+          <div class="card-img-container" onclick="openModal('${item.image}', '${item.title}')">
+            <img src="${item.image}" alt="${item.title}" loading="lazy">
+          </div>
+          <div class="card-body">
+            <span class="card-category">${item.subcategory || item.category}</span>
+            <div class="card-title">${item.title}</div>
+            <div class="card-price">${item.price} грн / ${item.unit}</div>
+          </div>
+        `;
+
+        catalogContainer.appendChild(card);
+      });
+    }
+
+    // Логіка збільшення зображення
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImg');
+
+    function openModal(imageSrc, title) {
+      modal.style.display = 'flex';
+      modalImg.src = imageSrc;
+      modalImg.alt = title;
+    }
+
+    // Закриття при кліку в будь-яке місце вікна
+    modal.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+  </script>
+
 </body>
 </html>
