@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Магазин тканини та фурнітури</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
+    .header { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    
+    /* Фінальні стилі категорій */
+    .categories { margin: 20px 0 10px 0; display: flex; gap: 10px; flex-wrap: wrap; }
+    .subcategories { margin-bottom: 20px; display: flex; gap: 8px; flex-wrap: wrap; }
+    
+    .cat-btn, .subcat-btn { padding: 8px 16px; border: 1px solid #0088cc; border-radius: 20px; background: #fff; color: #0088cc; cursor: pointer; font-weight: bold; }
+    .cat-btn.active, .subcat-btn.active { background: #0088cc; color: #fff; }
+    .subcat-btn { border-color: #6c757d; color: #6c757d; font-weight: normal; font-size: 14px; }
+    .subcat-btn.active { background: #6c757d; color: #fff; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+    .card { background: #fff; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; }
+    .card img { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; }
+    
+    .qty-box { margin: 10px 0; display: flex; justify-content: center; align-items: center; gap: 5px; }
+    .qty-input { width: 70px; padding: 5px; text-align: center; border: 1px solid #ccc; border-radius: 4px; }
+
+    .btn { background: #0088cc; color: #fff; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; width: 100%; }
+    
+    .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; }
+    .modal-content { background: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 450px; }
+    input[type="text"], input[type="tel"] { width: 100%; padding: 10px; margin: 8px 0; box-sizing: border-box; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h2>🧵 Світ Тканини та Фурнітури</h2>
+    <button class="btn" onclick="toggleCart()" style="width: auto;">🛒 Кошик (<span id="cart-count">0</span>)</button>
+  </div>
+
+  <!-- Кнопки головних категорій -->
+  <div class="categories" id="categories-container"></div>
+  <!-- Кнопки підкатегорій -->
+  <div class="subcategories" id="subcategories-container"></div>
+
+  <!-- Сітка товарів -->
+  <div class="grid" id="products-grid"></div>
+
+  <!-- Кошик -->
+  <div class="modal" id="cart-modal">
+    <div class="modal-content">
+      <h3>Ваше замовлення</h3>
+      <div id="cart-items" style="max-height: 250px; overflow-y: auto;"></div>
+      <h4>Всього: <span id="cart-total">0</span> грн</h4>
+      
+      <input type="text" id="cust-name" placeholder="Ваше ім'я" required>
+      <input type="tel" id="cust-phone" placeholder="Ваш номер телефону" required>
+      
+      <button class="btn" onclick="sendOrder()">Надіслати замовлення</button>
+      <button class="btn" onclick="toggleCart()" style="background:#888; margin-top: 5px;">Закрити</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
