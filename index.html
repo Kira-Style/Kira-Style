@@ -3,113 +3,352 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Магазин тканини та фурнітури</title>
+  <title>Kira стиль — світ тканини та фурнітури</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
-    .header { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-    
-    /* Фінальні стилі категорій */
-    .categories { margin: 20px 0 10px 0; display: flex; gap: 10px; flex-wrap: wrap; }
-    .subcategories { margin-bottom: 20px; display: flex; gap: 8px; flex-wrap: wrap; }
-    
-    .cat-btn, .subcat-btn { padding: 8px 16px; border: 1px solid #0088cc; border-radius: 20px; background: #fff; color: #0088cc; cursor: pointer; font-weight: bold; }
-    .cat-btn.active, .subcat-btn.active { background: #0088cc; color: #fff; }
-    .subcat-btn { border-color: #6c757d; color: #6c757d; font-weight: normal; font-size: 14px; }
-    .subcat-btn.active { background: #6c757d; color: #fff; }
+    :root {
+      --primary-color: #0088cc;
+      --primary-hover: #0077b3;
+      --bg-color: #f4f7f9;
+      --card-bg: #ffffff;
+      --text-main: #333;
+      --text-muted: #666;
+      --transition: all 0.3s ease;
+    }
 
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-    .card { background: #fff; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; }
-    .card img { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; }
-    
-    .qty-box { margin: 10px 0; display: flex; justify-content: center; align-items: center; gap: 5px; }
-    .qty-input { width: 70px; padding: 5px; text-align: center; border: 1px solid #ccc; border-radius: 4px; }
+    * { box-sizing: border-box; }
 
-    .btn { background: #0088cc; color: #fff; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; width: 100%; }
-    
-    .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; }
-    .modal-content { background: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 450px; }
-    input[type="text"], input[type="tel"] { width: 100%; padding: 10px; margin: 8px 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
 
-    /* Лайтбокс для збільшення зображень товарів */
-    .card img { cursor: zoom-in; }
-    .lightbox-modal {
+    /* Шапка сайту */
+    header {
+      background: #fff;
+      padding: 1rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+    }
+
+    .logo h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    /* Кнопка кошика */
+    .cart-btn-wrapper {
+      position: relative;
+    }
+
+    .btn-cart {
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .btn-cart:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Контейнери фільтрів */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .categories, .subcategories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .cat-btn, .subcat-btn {
+      padding: 10px 22px;
+      border: 2px solid var(--primary-color);
+      background: transparent;
+      color: var(--primary-color);
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: var(--transition);
+    }
+
+    .cat-btn:hover, .cat-btn.active {
+      background: var(--primary-color);
+      color: #fff;
+    }
+
+    .subcat-btn {
+      border-color: #d1d8e0;
+      color: var(--text-muted);
+      padding: 8px 18px;
+    }
+
+    .subcat-btn.active {
+      background: #6c757d;
+      border-color: #6c757d;
+      color: #fff;
+    }
+
+    /* Сітка товарів */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 15px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #edf2f7;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      cursor: zoom-in;
+      transition: opacity 0.3s;
+    }
+
+    .card img:hover {
+      opacity: 0.9;
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      margin: 15px 0 10px;
+      min-height: 2.4em;
+    }
+
+    .price-tag {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+
+    /* Вибір кількості */
+    .qty-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      background: #f8f9fa;
+      padding: 8px;
+      border-radius: 10px;
+    }
+
+    .qty-input {
+      width: 60px;
+      border: 1px solid #ddd;
+      padding: 5px;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .btn-add {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      width: 100%;
+    }
+
+    .btn-add:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Модальні вікна */
+    .modal {
       display: none;
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
       justify-content: center;
       align-items: center;
       z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 30px;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    #cart-items {
+      margin: 20px 0;
+      border-top: 1px solid #eee;
+    }
+
+    input[type="text"], input[type="tel"] {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .modal-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    /* Модалка для фото */
+    #img-modal {
       cursor: zoom-out;
     }
-    .lightbox-modal img {
+
+    #img-modal-src {
       max-width: 90%;
-      max-height: 90%;
-      border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      max-height: 85vh;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
     }
-    .lightbox-close {
-      position: absolute;
-      top: 15px;
-      right: 25px;
-      color: #fff;
-      font-size: 32px;
-      font-weight: bold;
-      cursor: pointer;
-      line-height: 1;
+
+    /* Адаптивність */
+    @media (max-width: 600px) {
+      .header { padding: 1rem 20px; }
+      .logo h1 { font-size: 1.2rem; }
+      .grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .card { padding: 10px; }
+      .card img { height: 140px; }
+      .cat-btn { padding: 8px 15px; font-size: 13px; }
     }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <h2>🧵 Світ Тканини та Фурнітури</h2>
-    <button class="btn" onclick="toggleCart()" style="width: auto;">🛒 Кошик (<span id="cart-count">0</span>)</button>
-  </div>
+  <header>
+    <div class="logo">
+      <h1>Kira стиль</h1>
+    </div>
+    <div class="cart-btn-wrapper">
+      <button class="btn-cart" onclick="toggleCart()">
+        <span>🛒</span> Кошик (<span id="cart-count">0</span>)
+      </button>
+    </div>
+  </header>
 
-  <!-- Кнопки головних категорій -->
-  <div class="categories" id="categories-container"></div>
-  <!-- Кнопки підкатегорій -->
-  <div class="subcategories" id="subcategories-container"></div>
+  <main class="container">
+    <!-- Фільтри -->
+    <div class="categories" id="categories-container"></div>
+    <div class="subcategories" id="subcategories-container"></div>
 
-  <!-- Сітка товарів -->
-  <div class="grid" id="products-grid"></div>
+    <!-- Каталог -->
+    <div class="grid" id="products-grid"></div>
+  </main>
 
-  <!-- Кошик -->
+  <!-- Модальне вікно кошика -->
   <div class="modal" id="cart-modal">
     <div class="modal-content">
-      <h3>Ваше замовлення</h3>
-      <div id="cart-items" style="max-height: 250px; overflow-y: auto;"></div>
-      <h4>Всього: <span id="cart-total">0</span> грн</h4>
+      <h2 style="margin-top:0">Ваше замовлення</h2>
+      <div id="cart-items"></div>
       
+      <div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0;">
+        <span style="font-size: 1.2rem; font-weight:600;">Разом:</span>
+        <span style="font-size: 1.5rem; font-weight:700; color: var(--primary-color);">
+          <span id="cart-total">0</span> грн
+        </span>
+      </div>
+
       <input type="text" id="cust-name" placeholder="Ваше ім'я" required>
       <input type="tel" id="cust-phone" placeholder="Ваш номер телефону" required>
-      
-      <button class="btn" onclick="sendOrder()">Надіслати замовлення</button>
-      <button class="btn" onclick="toggleCart()" style="background:#888; margin-top: 5px;">Закрити</button>
+
+      <div class="modal-footer">
+        <button class="btn-add" onclick="sendOrder()">Оформити замовлення</button>
+        <button class="btn-add" onclick="toggleCart()" style="background:#eee; color:#333;">Продовжити покупки</button>
+      </div>
     </div>
   </div>
 
-  <!-- Лайтбокс для перегляду збільшеного зображення -->
-  <div class="lightbox-modal" id="lightbox-modal" onclick="closeLightbox()">
-    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
-    <img id="lightbox-img" src="" alt="Збільшене зображення">
+  <!-- Модальне вікно для фото -->
+  <div class="modal" id="img-modal" onclick="closeImgModal()">
+    <img id="img-modal-src" src="" alt="Збільшене фото">
   </div>
 
-  <script src="script.js"></script>
   <script>
-    // Відкриття зображення товару в збільшеному вигляді при кліку
+    /* Скрипт для збільшення фото */
     document.getElementById('products-grid').addEventListener('click', function(e) {
-      if (e.target.tagName === 'IMG') {
-        document.getElementById('lightbox-img').src = e.target.src;
-        document.getElementById('lightbox-modal').style.display = 'flex';
+      if (e.target.tagName === 'IMG' && e.target.closest('.card')) {
+        const modal = document.getElementById('img-modal');
+        const modalImg = document.getElementById('img-modal-src');
+        modalImg.src = e.target.src;
+        modal.style.display = 'flex';
       }
     });
 
-    function closeLightbox() {
-      document.getElementById('lightbox-modal').style.display = 'none';
+    function closeImgModal() {
+      document.getElementById('img-modal').style.display = 'none';
     }
+
+    // Закриття модалок при натисканні Escape
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeImgModal();
+        if(typeof toggleCart === 'function' && document.getElementById('cart-modal').style.display === 'flex') {
+           toggleCart();
+        }
+      }
+    });
   </script>
+
+  <!-- Підключення зовнішнього файлу логіки -->
+  <script src="script.js"></script>
+
 </body>
 </html>
