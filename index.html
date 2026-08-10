@@ -15,6 +15,7 @@
       --card-bg: #ffffff;
       --text: #2c3e50;
       --radius: 12px;
+      --success: #27ae60;
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -54,6 +55,17 @@
       align-items: center;
       gap: 6px;
       cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    /* Анімація кошика */
+    @keyframes cart-bump {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .cart-animate {
+      animation: cart-bump 0.3s ease-out;
     }
 
     /* Контейнер */
@@ -71,13 +83,13 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
-    /* Категорії - Скрол пальцем вбік */
+    /* Категорії */
     .categories, .subcategories {
       display: flex;
       overflow-x: auto;
       gap: 8px;
       padding-bottom: 8px;
-      scrollbar-width: none; /* приховати скролбар */
+      scrollbar-width: none;
     }
     .categories::-webkit-scrollbar { display: none; }
 
@@ -99,7 +111,7 @@
     /* Сітка товарів */
     .grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr); /* 2 колонки на телефоні */
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
     }
 
@@ -118,7 +130,6 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
 
-    /* Стікери */
     .badge {
       position: absolute;
       top: 15px;
@@ -153,7 +164,6 @@
       -webkit-box-orient: vertical;
     }
 
-    /* Ціни */
     .price-box { margin-bottom: 10px; }
     .price-current {
       display: block;
@@ -168,7 +178,6 @@
       font-size: 0.8rem;
     }
 
-    /* Вибір кількості */
     .qty-row {
       display: flex;
       align-items: center;
@@ -194,6 +203,12 @@
       font-size: 14px;
       cursor: pointer;
       margin-top: auto;
+      transition: background 0.3s;
+    }
+
+    /* Стиль кнопки "У кошику" */
+    .btn-add.in-cart {
+      background: var(--success);
     }
 
     /* Модалки */
@@ -240,7 +255,7 @@
 
   <header>
     <div class="logo"><h1>Kira стиль</h1></div>
-    <button class="btn-cart" onclick="toggleCart()">
+    <button class="btn-cart" id="main-cart-btn" onclick="toggleCart()">
       🛒 <span id="cart-count">0</span>
     </button>
   </header>
@@ -304,11 +319,33 @@
       if (typeof sendOrder === 'function') sendOrder();
     }
 
-    // Збільшення фото
+    // Обробка кліків у сітці (Збільшення фото + Анімація додавання)
     document.getElementById('products-grid').addEventListener('click', function(e) {
+      // Збільшення фото
       if (e.target.tagName === 'IMG') {
         document.getElementById('img-modal-src').src = e.target.src;
         document.getElementById('img-modal').style.display = 'flex';
+      }
+
+      // Логіка кнопки "Додати"
+      if (e.target.classList.contains('btn-add')) {
+        // Зміна тексту на кнопці
+        const originalText = e.target.innerText;
+        e.target.innerText = '✓ У кошику';
+        e.target.classList.add('in-cart');
+        
+        // Анімація іконки кошика в шапці
+        const cartBtn = document.getElementById('main-cart-btn');
+        cartBtn.classList.remove('cart-animate');
+        void cartBtn.offsetWidth; // скидання анімації (reflow)
+        cartBtn.classList.add('cart-animate');
+
+        // Через 2 секунди повертаємо текст (опціонально), 
+        // або залишаємо "У кошику", поки користувач не оновить сторінку
+        setTimeout(() => {
+            e.target.innerText = originalText;
+            e.target.classList.remove('in-cart');
+        }, 2000);
       }
     });
   </script>
