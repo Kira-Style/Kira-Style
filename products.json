@@ -75,4 +75,5 @@
   { "id": 74, "title": "нитка 40ярдів №40 колір 599", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/74.jpg" },
   { "id": 75, "title": "нитка 40ярдів №40 колір 524", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/75.jpg" },
   { "id": 76, "title": "нитка 40ярдів №40 колір 597", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/76.jpg" }
+  { "id": 77, "title": "кілограм бульби", "price": 10000, "oldPrice": 10000000, "badge": "акція", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/77.jpg" }
 ]
