@@ -65,7 +65,7 @@
   { "id": 64, "title": "нитка 40ярдів №40 колір 743", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/64.jpg" },
   { "id": 65, "title": "нитка 40ярдів №40 колір 521", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/65.jpg" },
   { "id": 66, "title": "нитка 40ярдів №40 колір 120", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/66.jpg" },
-  { "id": 67, "title": "нитка 40ярдів №40 колір 527", "price": 13, "oldPrice": null, "badge": "ааа 67 посхалко", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/67.jpg" },
+  { "id": 67, "title": "нитка 40ярдів №40 колір 527", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/67.jpg" },
   { "id": 68, "title": "нитка 40ярдів №40 колір 136", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/68.jpg" },
   { "id": 69, "title": "нитка 40ярдів №40 колір 729", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/69.jpg" },
   { "id": 70, "title": "нитка 40ярдів №40 колір 728", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/70.jpg" },
@@ -92,5 +92,6 @@
   { "id": 91, "title": "ґудзик Пластмасса 30мм Італія", "price": 15, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/91.jpg" },
   { "id": 92, "title": "ґудзик Пластмасса 25мм Італія", "price": 9, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/92.jpg" },
   { "id": 93, "title": "ґудзик Пластмасса 29мм Італія", "price": 16, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/93.jpg" },
-  { "id": 94, "title": "ґудзик Пластмасса 28мм Італія", "price": 15, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/94.jpg" }  
+  { "id": 94, "title": "ґудзик Пластмасса 28мм Італія", "price": 15, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/94.jpg" },
+  { "id": 95, "title": "бульба", "price": 100, "oldPrice": 1000000000, "badge": "акція", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/95.jpg" }
 ]
