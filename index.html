@@ -315,8 +315,12 @@
     function validateAndSend() {
       const name = document.getElementById('cust-name').value;
       const phone = document.getElementById('cust-phone').value.replace(/\D/g, '');
+      const total = parseFloat(document.getElementById('cart-total').innerText) || 0;
+
       if (name.length < 2) return alert("Введіть ім'я");
       if (phone.length < 10) return alert("Введіть коректний номер");
+      if (total < 100) return alert("Мінімальна сума замовлення — 100 грн");
+      
       if (typeof sendOrder === 'function') sendOrder();
     }
 
