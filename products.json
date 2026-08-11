@@ -65,7 +65,7 @@
   { "id": 64, "title": "нитка 40ярдів №40 колір 743", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/64.jpg" },
   { "id": 65, "title": "нитка 40ярдів №40 колір 521", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/65.jpg" },
   { "id": 66, "title": "нитка 40ярдів №40 колір 120", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/66.jpg" },
-  { "id": 67, "title": "нитка 40ярдів №40 колір 527", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/67.jpg" },
+  { "id": 67, "title": "нитка 40ярдів №40 колір 527", "price": 13, "oldPrice": null, "badge": "ааа 67 посхалко", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/67.jpg" },
   { "id": 68, "title": "нитка 40ярдів №40 колір 136", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/68.jpg" },
   { "id": 69, "title": "нитка 40ярдів №40 колір 729", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/69.jpg" },
   { "id": 70, "title": "нитка 40ярдів №40 колір 728", "price": 13, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "нитки", "image": "images/70.jpg" },
