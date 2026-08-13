@@ -138,7 +138,7 @@ function toggleCart() {
   modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
 }
 
-// Відправка в Telegram
+// Відправка в Telegram (З ДОДАНИМИ ПОСИЛАННЯМИ НА ФОТО)
 async function sendOrder() {
   const name = document.getElementById('cust-name').value.trim();
   const phone = document.getElementById('cust-phone').value.trim();
@@ -149,7 +149,12 @@ async function sendOrder() {
   }
 
   const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-  const itemsList = cart.map(i => `• ${i.title}: ${i.qty} ${i.unit} x ${i.price} = ${Math.round(i.qty * i.price * 100) / 100} грн`).join('\n');
+  
+  // Формуємо список товарів із посиланням на фотографію
+  const itemsList = cart.map(i => {
+    const photoUrl = new URL(i.image, window.location.href).href;
+    return `• ${i.title}: ${i.qty} ${i.unit} x ${i.price} = ${Math.round(i.qty * i.price * 100) / 100} грн (<a href="${photoUrl}">🖼 Фото</a>)`;
+  }).join('\n');
 
   const text = `📦 <b>НОВЕ ЗАМОВЛЕННЯ</b>\n\n👤 <b>Ім'я:</b> ${name}\n📞 <b>Тел:</b> ${phone}\n\n🛒 <b>Товари:</b>\n${itemsList}\n\n💰 <b>Разом:</b> ${total} грн`;
 
@@ -157,7 +162,12 @@ async function sendOrder() {
     const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'HTML' })
+      body: JSON.stringify({ 
+        chat_id: CHAT_ID, 
+        text: text, 
+        parse_mode: 'HTML',
+        disable_web_page_preview: true // Вимикає великі попередні перегляди посилань, роблячи чат охайним
+      })
     });
 
     if (res.ok) {
