@@ -102,7 +102,7 @@
   { "id": 101, "title": "ґудзик Пластмасса 21мм Китай", "price": 4, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/101.jpg" },
   { "id": 102, "title": "ґудзик Пластмасса 25мм Італія", "price": 12, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/102.jpg" },
   { "id": 103, "title": "ґудзик метал 18мм Італія", "price": 10, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/103.jpg" },
-  { "id": 104, "title": "ґудзик Пластмасса 23мм китай", "price": 150 "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/104.jpg" },
+  { "id": 104, "title": "ґудзик Пластмасса 23мм китай", "price": 150, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/104.jpg" },
   { "id": 105, "title": "ґудзик Пластмасса 6мм Китай 2шт", "price": 1, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/105.jpg" },
   { "id": 106, "title": "ґудзик Пластмасса 15мм Італія", "price": 4, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/106.jpg" },
   { "id": 107, "title": "ґудзик Пластмасса 15мм Китай", "price": 3, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/107.jpg" },
