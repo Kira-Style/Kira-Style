@@ -54,6 +54,7 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
+    .logo { cursor: pointer; text-decoration: none; }
     .logo h1 { margin: 0; font-size: 1.2rem; color: var(--primary); }
 
     .btn-cart {
@@ -140,6 +141,7 @@
       display: flex;
       flex-direction: column;
       box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      cursor: pointer;
     }
 
     .badge {
@@ -223,6 +225,40 @@
       background: var(--success);
     }
 
+    /* Сторінка товару */
+    #product-view {
+      display: none;
+      background: #fff;
+      min-height: 100vh;
+      padding: 20px 15px;
+    }
+    .product-page-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .btn-back {
+      display: inline-block;
+      margin-bottom: 15px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .product-full-img {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .product-details h2 { margin: 0 0 10px 0; font-size: 1.4rem; }
+    .product-details .price-current { font-size: 1.5rem; }
+    .product-actions {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
     /* Модалки */
     .modal {
       display: none;
@@ -266,13 +302,16 @@
 <body>
 
   <header>
-    <div class="logo"><h1>Kira стиль</h1></div>
+    <a href="#" class="logo" onclick="closeProductView(event)">
+      <h1>Kira стиль</h1>
+    </a>
     <button class="btn-cart" id="main-cart-btn" onclick="toggleCart()">
       🛒 <span id="cart-count">0</span>
     </button>
   </header>
 
-  <div class="container">
+  <!-- Головна сторінка (Каталог) -->
+  <div class="container" id="catalog-view">
     <div class="search-box">
       <input type="text" id="search-input" placeholder="Пошук тканини чи фурнітури...">
     </div>
@@ -282,6 +321,16 @@
 
     <div id="products-grid" class="grid">
       <!-- Товари завантажаться сюди -->
+    </div>
+  </div>
+
+  <!-- Окрема сторінка товару -->
+  <div id="product-view">
+    <div class="product-page-content">
+      <div class="btn-back" onclick="closeProductView(event)">← Назад до каталогу</div>
+      <div id="product-details-container">
+        <!-- Дані товару завантажаться сюди динамічно -->
+      </div>
     </div>
   </div>
 
@@ -335,35 +384,113 @@
       if (typeof sendOrder === 'function') sendOrder();
     }
 
-    // Обробка кліків у сітці (Збільшення фото + Анімація додавання)
-    document.getElementById('products-grid').addEventListener('click', function(e) {
-      // Збільшення фото
-      if (e.target.tagName === 'IMG') {
-        document.getElementById('img-modal-src').src = e.target.src;
-        document.getElementById('img-modal').style.display = 'flex';
-      }
+    // Повернення на головну
+    function closeProductView(e) {
+        if(e) e.preventDefault();
+        window.location.hash = '';
+        document.getElementById('product-view').style.display = 'none';
+        document.getElementById('catalog-view').style.display = 'block';
+        window.scrollTo(0,0);
+    }
 
-      // Логіка кнопки "Додати"
-      if (e.target.classList.contains('btn-add')) {
-        // Зміна тексту на кнопці
-        const originalText = e.target.innerText;
-        e.target.innerText = '✓ У кошику';
-        e.target.classList.add('in-cart');
+    // Відкриття сторінки товару
+    function openProductPage(productId) {
+        // Знаходимо дані товару в масиві, який завантажив script.js
+        // Зазвичай це window.products або аналогічна назва
+        const product = (window.allProducts || []).find(p => p.id == productId);
+        if (!product) return;
+
+        const container = document.getElementById('product-details-container');
+        container.innerHTML = `
+            <img src="${product.img}" class="product-full-img" alt="${product.name}" onclick="showFullImg('${product.img}')">
+            <div class="product-details">
+                <h2>${product.name}</h2>
+                <div class="price-box">
+                    ${product.oldPrice ? `<span class="price-old">${product.oldPrice} грн</span>` : ''}
+                    <span class="price-current">${product.price} грн</span>
+                </div>
+                <div class="product-actions">
+                    <div class="qty-row">
+                        Кількість: <input type="number" value="1" min="1" step="1" class="qty-input" id="qty-p-${product.id}">
+                    </div>
+                    <button class="btn-add" id="btn-p-${product.id}" onclick="handleProductBuy('${product.id}')">
+                        Додати у кошик
+                    </button>
+                </div>
+                <p style="margin-top:20px; color: #666; font-size: 0.9rem;">
+                    * Ціна вказана за одиницю товару (метр або шт).
+                </p>
+            </div>
+        `;
         
-        // Анімація іконки кошика в шапці
-        const cartBtn = document.getElementById('main-cart-btn');
-        cartBtn.classList.remove('cart-animate');
-        void cartBtn.offsetWidth; // скидання анімації (reflow)
-        cartBtn.classList.add('cart-animate');
+        document.getElementById('catalog-view').style.display = 'none';
+        document.getElementById('product-view').style.display = 'block';
+        window.scrollTo(0,0);
+    }
 
-        // Через 2 секунди повертаємо текст (опціонально), 
-        // або залишаємо "У кошику", поки користувач не оновить сторінку
-        setTimeout(() => {
-            e.target.innerText = originalText;
-            e.target.classList.remove('in-cart');
-        }, 2000);
-      }
+    function showFullImg(src) {
+        document.getElementById('img-modal-src').src = src;
+        document.getElementById('img-modal').style.display = 'flex';
+    }
+
+    function handleProductBuy(id) {
+        const qty = document.getElementById('qty-p-'+id).value;
+        if (typeof addToCart === 'function') {
+            addToCart(id, qty);
+            
+            // Анімація кнопки
+            const btn = document.getElementById('btn-p-'+id);
+            const originalText = btn.innerText;
+            btn.innerText = '✓ Додано';
+            btn.classList.add('in-cart');
+            
+            // Анімація кошика в шапці
+            const cartBtn = document.getElementById('main-cart-btn');
+            cartBtn.classList.remove('cart-animate');
+            void cartBtn.offsetWidth;
+            cartBtn.classList.add('cart-animate');
+
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.classList.remove('in-cart');
+            }, 2000);
+        }
+    }
+
+    // Обробка кліків у сітці
+    document.getElementById('products-grid').addEventListener('click', function(e) {
+      const card = e.target.closest('.card');
+      if (!card) return;
+      
+      const productId = card.getAttribute('data-id');
+
+      // Якщо клік по кнопці купити всередині картки - нічого не робимо (спрацює існуюча логіка)
+      if (e.target.classList.contains('btn-add')) return;
+
+      // В іншому випадку - відкриваємо сторінку товару
+      window.location.hash = 'product-' + productId;
     });
+
+    // Маршрутизація по хешу
+    function handleRouting() {
+        const hash = window.location.hash;
+        if (hash.startsWith('#product-')) {
+            const id = hash.replace('#product-', '');
+            // Чекаємо трохи, щоб script.js встиг завантажити дані, якщо це перший запуск
+            const checkData = setInterval(() => {
+                if (window.allProducts && window.allProducts.length > 0) {
+                    openProductPage(id);
+                    clearInterval(checkData);
+                }
+            }, 100);
+        } else {
+            document.getElementById('product-view').style.display = 'none';
+            document.getElementById('catalog-view').style.display = 'block';
+        }
+    }
+
+    window.addEventListener('hashchange', handleRouting);
+    window.addEventListener('load', handleRouting);
   </script>
 
   <script src="script.js"></script>
