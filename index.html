@@ -337,7 +337,7 @@
         </div>
     </div>
 
-    <!-- Старе збільшення фото (залишено для сумісності, якщо потрібно) -->
+    <!-- Збільшення фото -->
     <div class="modal" id="img-modal" onclick="this.style.display='none'">
         <img id="img-modal-src" src="" style="max-width: 100%; max-height: 90vh; border-radius: 8px;">
     </div>
@@ -351,23 +351,37 @@
         }
 
         function closeProductModal() {
-            document.getElementById('product-modal').style.display = 'none';
+            const modal = document.getElementById('product-modal');
+            if (modal) modal.style.display = 'none';
             document.body.style.overflow = 'auto';
         }
 
-        // Відкриття вікна товару за ID
+        // Відкриття вікна товару за ID або порядковим індексом
         function openProductById(id) {
-            // Шукаємо картку в DOM, яку створив script.js
-            const card = document.querySelector(`.card[data-id="${id}"]`) || 
-                         Array.from(document.querySelectorAll('.card')).find(c => c.dataset.id == id);
-            
+            const cards = document.querySelectorAll('.card');
+            if (!cards.length) return;
+
+            let card = document.querySelector(`.card[data-id="${id}"]`);
+
+            // Якщо data-id немає в розмітці script.js, шукаємо за порядковим номером
+            if (!card && !isNaN(id)) {
+                card = cards[parseInt(id)];
+            }
+            if (!card) {
+                card = Array.from(cards).find(c => c.dataset.id == id);
+            }
+
             if (!card) return;
 
-            const title = card.querySelector('h3').innerText;
-            const img = card.querySelector('img').src;
-            const price = card.querySelector('.price-current').innerText;
-            const oldPriceEl = card.querySelector('.price-old');
+            const titleEl = card.querySelector('h3') || card.querySelector('.title') || card.querySelector('h4');
+            const imgEl = card.querySelector('img');
+            const priceEl = card.querySelector('.price-current') || card.querySelector('.price');
+            const oldPriceEl = card.querySelector('.price-old') || card.querySelector('.old-price');
             const badges = card.querySelectorAll('.badge');
+
+            const title = titleEl ? titleEl.innerText : 'Товар';
+            const img = imgEl ? imgEl.src : '';
+            const price = priceEl ? priceEl.innerText : '';
             
             let badgesHtml = '';
             badges.forEach(b => {
@@ -377,7 +391,7 @@
             const content = document.getElementById('product-view-content');
             content.innerHTML = `
                 <div class="back-link" onclick="goHome()">← Назад до каталогу</div>
-                <img src="${img}" class="product-view-img">
+                ${img ? `<img src="${img}" class="product-view-img">` : ''}
                 <div class="product-view-badges">${badgesHtml}</div>
                 <h2 class="product-view-title">${title}</h2>
                 <div class="price-box">
@@ -395,14 +409,12 @@
             // Обробник кнопки "Купити" у модалці
             document.getElementById('modal-buy-btn').onclick = function() {
                 const qty = document.getElementById('modal-qty').value;
-                // Знаходимо оригінальну кнопку в сітці, щоб спрацювала вся логіка з script.js
                 const originalQtyInput = card.querySelector('.qty-input');
                 const originalAddBtn = card.querySelector('.btn-add');
                 
                 if (originalQtyInput) originalQtyInput.value = qty;
-                if (originalAddBtn) originalAddBtn.click(); // Викликає addToCart та анімації
+                if (originalAddBtn) originalAddBtn.click();
 
-                // Візуальний ефект на кнопці модалки
                 this.innerText = '✓ Додано';
                 this.style.background = 'var(--success)';
                 setTimeout(() => {
@@ -415,7 +427,7 @@
             document.body.style.overflow = 'hidden';
         }
 
-        // Слідкуємо за зміною URL
+        // Слідкуємо за зміною URL (хешу)
         window.addEventListener('hashchange', () => {
             const hash = location.hash;
             if (hash.startsWith('#product-')) {
@@ -426,29 +438,37 @@
             }
         });
 
-        // Перевірка при завантаженні сторінки (для прямих посилань)
+        // Завантаження при прямому переході по посиланню (очікуємо генерацію з script.js)
         window.addEventListener('load', () => {
             if (location.hash.startsWith('#product-')) {
-                // Невелика затримка, щоб script.js встиг завантажити товари
-                setTimeout(() => {
-                    const id = location.hash.replace('#product-', '');
-                    openProductById(id);
-                }, 500);
+                const id = location.hash.replace('#product-', '');
+                let attempts = 0;
+                const interval = setInterval(() => {
+                    attempts++;
+                    const cards = document.querySelectorAll('.card');
+                    if (cards.length > 0) {
+                        openProductById(id);
+                        clearInterval(interval);
+                    } else if (attempts > 20) {
+                        clearInterval(interval);
+                    }
+                }, 200);
             }
         });
 
-        // --- ІСНУЮЧА ЛОГІКА (ПОШУК, ВГОРУ, ВАЛІДАЦІЯ) ---
+        // --- ЛОГІКА ПОШУКУ, ЗГОГОТКИ ТА ВАЛІДАЦІЇ ---
 
         document.getElementById('search-input').addEventListener('input', function(e) {
             const term = e.target.value.toLowerCase();
             document.querySelectorAll('.card').forEach(card => {
-                const title = card.querySelector('h3').innerText.toLowerCase();
+                const title = card.querySelector('h3, .title, h4')?.innerText.toLowerCase() || '';
                 card.style.display = title.includes(term) ? 'flex' : 'none';
             });
         });
 
         window.onscroll = function() {
-            document.getElementById('btn-up').style.display = window.scrollY > 400 ? 'block' : 'none';
+            const btnUp = document.getElementById('btn-up');
+            if (btnUp) btnUp.style.display = window.scrollY > 400 ? 'block' : 'none';
         };
 
         function validateAndSend() {
@@ -463,12 +483,11 @@
             if (typeof sendOrder === 'function') sendOrder();
         }
 
-        // Обробка кліків у сітці
+        // Обробка кліків у сітці товарів
         document.getElementById('products-grid').addEventListener('click', function(e) {
             const card = e.target.closest('.card');
             if (!card) return;
 
-            // Якщо клік по кнопці "Додати" або інпуту кількості - не відкриваємо модалку товару
             if (e.target.classList.contains('btn-add') || e.target.classList.contains('qty-input')) {
                 if (e.target.classList.contains('btn-add')) {
                     const originalText = e.target.innerText;
@@ -476,9 +495,11 @@
                     e.target.classList.add('in-cart');
                     
                     const cartBtn = document.getElementById('main-cart-btn');
-                    cartBtn.classList.remove('cart-animate');
-                    void cartBtn.offsetWidth; 
-                    cartBtn.classList.add('cart-animate');
+                    if (cartBtn) {
+                        cartBtn.classList.remove('cart-animate');
+                        void cartBtn.offsetWidth; 
+                        cartBtn.classList.add('cart-animate');
+                    }
 
                     setTimeout(() => {
                         e.target.innerText = originalText;
@@ -488,18 +509,18 @@
                 return;
             }
 
-            // В іншому випадку — відкриваємо детальний перегляд через хеш
-            const productId = card.dataset.id || Array.from(document.querySelectorAll('.card')).indexOf(card);
+            const cards = Array.from(document.querySelectorAll('.card'));
+            const productId = card.dataset.id !== undefined ? card.dataset.id : cards.indexOf(card);
             location.hash = 'product-' + productId;
         });
 
-        // Закриття при кліку поза контентом
-        window.onclick = function(event) {
+        // Закриття модалок при кліку на фон без перезапису обробників з script.js
+        window.addEventListener('click', function(event) {
             const productModal = document.getElementById('product-modal');
             const cartModal = document.getElementById('cart-modal');
-            if (event.target == productModal) goHome();
-            if (event.target == cartModal) toggleCart();
-        }
+            if (event.target === productModal) goHome();
+            if (event.target === cartModal && typeof toggleCart === 'function') toggleCart();
+        });
     </script>
 
     <script src="script.js"></script>
