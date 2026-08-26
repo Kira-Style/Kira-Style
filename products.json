@@ -175,7 +175,7 @@
   { "id": 174, "title": "шифон 150см ширина", "price": 50, "oldPrice": 100, "badge": "акція", "unit": "м", "category": "Тканини", "subcategory": "легкі", "image": "images/174.jpg" },
   { "id": 175, "title": "шифон з вишивкою 150см ширина", "price": 65, "oldPrice": 120, "badge": "акція", "unit": "м", "category": "Тканини", "subcategory": "легкі", "image": "images/175.jpg" },
   { "id": 176, "title": "ґудзик Пластмасса 20мм Китай", "price": 4, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/176.jpg" },
-  { "id": 177, "title": "мереживо ", "price": 15, "oldPrice": null, "badge": "", "unit": "м", "category": "тканини", "subcategory": "мереживо", "image": "images/177.jpg" },
+  { "id": 177, "title": "мереживо ", "price": 15, "oldPrice": null, "badge": "", "unit": "м", "category": "Тканини", "subcategory": "мереживо", "image": "images/177.jpg" },
   { "id": 178, "title": "ґудзик мушля 20мм Італія", "price": 7, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/178.jpg" },
   { "id": 179, "title": "ґудзик Пластмасса 1мм Китай", "price": 1, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/179.jpg" },
   { "id": 181, "title": "ґудзик шкіра 23мм Італія", "price": 10, "oldPrice": null, "badge": "", "unit": "шт", "category": "Фурнітура", "subcategory": "ґудзики", "image": "images/181.jpg" },
