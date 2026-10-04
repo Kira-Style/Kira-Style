@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <!-- Заголовок сайту в Гуглі -->
     <title>Kira стиль — Світ тканини та фурнітури | Купити швейну фурнітуру</title>
 
@@ -10,12 +13,9 @@
     <!-- Ключові слова для пошукових роботів -->
     <meta name="keywords" content="Kira стиль, світ тканини та фурнітури, швейна фурнітура, купити тканину, нитки, ґудзики, блискавки, шиття">
 
-    <!-- Ваші підключені файли стилів -->
-    <link rel="stylesheet" href="style.css">
     <meta name="google-site-verification" content="83tI4WZow4wj6il9myOWiIjTkbXXoWEw-Eo1ABdetEk" />
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --primary: #0088cc;
@@ -338,8 +338,8 @@
             <input type="text" id="cust-name" placeholder="Ваше ім'я" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
             <input type="tel" id="cust-phone" placeholder="099 123 45 67" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #ddd; border-radius:8px;">
 
-            <button class="btn-add" onclick="validateAndSend()" style="width: 100%;">Відправити замовлення</button>
-            <button class="btn-add" onclick="toggleCart()" style="width: 100%; background: #eee; color: #333; margin-top: 8px;">Закрити</button>
+            <button class="btn-add" type="button" onclick="validateAndSend()" style="width: 100%;">Відправити замовлення</button>
+            <button class="btn-add" type="button" onclick="toggleCart()" style="width: 100%; background: #eee; color: #333; margin-top: 8px;">Закрити</button>
         </div>
     </div>
 
@@ -376,7 +376,6 @@
 
             let card = document.querySelector(`.card[data-id="${id}"]`);
 
-            // Якщо data-id немає в розмітці script.js, шукаємо за порядковим номером
             if (!card && !isNaN(id)) {
                 card = cards[parseInt(id)];
             }
@@ -419,7 +418,6 @@
                 </button>
             `;
 
-            // Обробник кнопки "Купити" у модалці
             document.getElementById('modal-buy-btn').onclick = function() {
                 const qty = document.getElementById('modal-qty').value;
                 const originalQtyInput = card.querySelector('.qty-input');
@@ -440,7 +438,6 @@
             document.body.style.overflow = 'hidden';
         }
 
-        // Слідкуємо за зміною URL (хешу)
         window.addEventListener('hashchange', () => {
             const hash = location.hash;
             if (hash.startsWith('#product-')) {
@@ -451,7 +448,6 @@
             }
         });
 
-        // Завантаження при прямому переході по посиланню (очікуємо генерацію з script.js)
         window.addEventListener('load', () => {
             if (location.hash.startsWith('#product-')) {
                 const id = location.hash.replace('#product-', '');
@@ -491,12 +487,14 @@
 
             if (name.length < 2) return alert("Введіть ім'я");
             if (phone.length < 10) return alert("Введіть коректний номер");
-            if (total < 100) return alert("Мінімальна сума замовлення — 100 грн");
             
-            if (typeof sendOrder === 'function') sendOrder();
+            if (typeof sendOrder === 'function') {
+                sendOrder();
+            } else {
+                alert("Помилка: функцію sendOrder() не знайдено у script.js!");
+            }
         }
 
-        // Обробка кліків у сітці товарів
         document.getElementById('products-grid').addEventListener('click', function(e) {
             const card = e.target.closest('.card');
             if (!card) return;
@@ -527,7 +525,6 @@
             location.hash = 'product-' + productId;
         });
 
-        // Закриття модалок при кліку на фон без перезапису обробників з script.js
         window.addEventListener('click', function(event) {
             const productModal = document.getElementById('product-modal');
             const cartModal = document.getElementById('cart-modal');
