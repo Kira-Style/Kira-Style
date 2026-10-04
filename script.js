@@ -1,6 +1,6 @@
-// === НАЛАШТУВАННЯ TELEGRAM ===
-const BOT_TOKEN = '8528001817:AAFKjG0vcJFkXzLVl1P5Ehl0uaIS-nI7RQg'; 
-const CHAT_ID = '-5357189546';
+// === НАЛАШТУВАННЯ GOOGLE APPS SCRIPT ===
+// Вставте сюди ваше посилання з Google Apps Script (отримане після розгортання)
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbythiLgLYDVhrx17ZoiQm6l22wC0iGYtN1rNjNE_UmlnBk9cR6ogT-Pr7msOnlnYfw/exec';
 
 const CATEGORIES = {
   "Всі": [],
@@ -138,7 +138,7 @@ function toggleCart() {
   modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
 }
 
-// Відправка в Telegram (З ДОДАНИМИ ПОСИЛАННЯМИ НА ФОТО)
+// Відправка замовлення через Google Apps Script (БЕЗПЕЧНО)
 async function sendOrder() {
   const name = document.getElementById('cust-name').value.trim();
   const phone = document.getElementById('cust-phone').value.trim();
@@ -156,27 +156,24 @@ async function sendOrder() {
     return `• ${i.title}: ${i.qty} ${i.unit} x ${i.price} = ${Math.round(i.qty * i.price * 100) / 100} грн (<a href="${photoUrl}">🖼 Фото</a>)`;
   }).join('\n');
 
-  const text = `📦 <b>НОВЕ ЗАМОВЛЕННЯ</b>\n\n👤 <b>Ім'я:</b> ${name}\n📞 <b>Тел:</b> ${phone}\n\n🛒 <b>Товари:</b>\n${itemsList}\n\n💰 <b>Разом:</b> ${total} грн`;
-
   try {
-    const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    await fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
+      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
-        chat_id: CHAT_ID, 
-        text: text, 
-        parse_mode: 'HTML',
-        disable_web_page_preview: true // Вимикає великі попередні перегляди посилань, роблячи чат охайним
+        name: name, 
+        phone: phone, 
+        total: total,
+        items: itemsList
       })
     });
 
-    if (res.ok) {
-      alert('Дякуємо! Замовлення відправлено.');
-      cart = [];
-      saveCart();
-      updateCartUI();
-      toggleCart();
-    }
+    alert('Дякуємо! Замовлення відправлено.');
+    cart = [];
+    saveCart();
+    updateCartUI();
+    toggleCart();
   } catch (err) {
     alert('Помилка з’єднання.');
   }
