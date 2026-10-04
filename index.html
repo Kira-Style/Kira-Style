@@ -487,11 +487,27 @@
 
             if (name.length < 2) return alert("Введіть ім'я");
             if (phone.length < 10) return alert("Введіть коректний номер");
-            
+            if (total < 100) return alert("Мінімальна сума замовлення — 100 грн");
+
+            const sendBtn = document.querySelector('#cart-modal .btn-add');
+            if (sendBtn) {
+                sendBtn.disabled = true;
+                sendBtn.innerText = 'Надсилання...';
+            }
+
             if (typeof sendOrder === 'function') {
-                sendOrder();
+                Promise.resolve(sendOrder()).finally(() => {
+                    if (sendBtn) {
+                        sendBtn.disabled = false;
+                        sendBtn.innerText = 'Відправити замовлення';
+                    }
+                });
             } else {
                 alert("Помилка: функцію sendOrder() не знайдено у script.js!");
+                if (sendBtn) {
+                    sendBtn.disabled = false;
+                    sendBtn.innerText = 'Відправити замовлення';
+                }
             }
         }
 
