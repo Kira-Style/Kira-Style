@@ -65,11 +65,11 @@ function renderProducts() {
     const oldPriceHtml = p.oldPrice ? `<span style="text-decoration: line-through; color: #999; font-size: 0.9rem; margin-right: 5px;">${p.oldPrice} грн</span>` : '';
 
     return `
-      <div class="card">
+      <div class="card" data-id="${p.id}">
         ${badgeHtml}
         <img src="${p.image}" alt="${p.title}" onerror="this.src='https://via.placeholder.com/200?text=Немає+фото'">
         <h3>${p.title}</h3>
-        <p class="price-tag">${oldPriceHtml}<span>${p.price} грн / ${p.unit}</span></p>
+        <p class="price-tag">${oldPriceHtml}<span class="price-current">${p.price} грн / ${p.unit}</span></p>
         
         <div class="qty-box">
           <input type="number" id="qty-${p.id}" class="qty-input" value="1" min="${step}" step="${step}">
@@ -148,13 +148,22 @@ async function sendOrder() {
     return;
   }
 
-  const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const total = Math.round(cart.reduce((sum, item) => sum + (item.price * item.qty), 0) * 100) / 100;
   
-  // Формуємо список товарів із посиланням на фотографію
-  const itemsList = cart.map(i => {
-    const photoUrl = new URL(i.image, window.location.href).href;
-    return `• ${i.title}: ${i.qty} ${i.unit} x ${i.price} = ${Math.round(i.qty * i.price * 100) / 100} грн (<a href="${photoUrl}">🖼 Фото</a>)`;
-  }).join('\n');
+  // Формуємо масив товарів із повними даними та посиланнями на фотографії
+  const items = cart.map(i => {
+    let photoUrl = i.image;
+    try {
+      photoUrl = new URL(i.image, window.location.href).href;
+    } catch(e) {}
+
+    return {
+      name: i.title,
+      qty: `${i.qty} ${i.unit}`,
+      price: i.price,
+      image: photoUrl
+    };
+  });
 
   try {
     await fetch(GOOGLE_SCRIPT_URL, {
@@ -165,7 +174,7 @@ async function sendOrder() {
         name: name, 
         phone: phone, 
         total: total,
-        items: itemsList
+        items: items
       })
     });
 
