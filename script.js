@@ -1,6 +1,6 @@
 // === НАЛАШТУВАННЯ GOOGLE APPS SCRIPT ===
 // Вставте сюди ваше посилання з Google Apps Script (отримане після розгортання)
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxf1hiUDi3LPZWnaPL6qOp2uJGIwa9SiiXykz64BmvjKGzPBLDF0tSj-5fvPfZVjAA/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwEj73QU8zJHSfPxiNgHD_uMGQabRGKcqAWoTMFBJ5H7OWoTOOH_M8R3CEHpRMf9NM/exec';
 
 const CATEGORIES = {
   "Всі": [],
